@@ -1,0 +1,81 @@
+import React, { useEffect, useState } from 'react';
+import { listAll, ref, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../firebase';
+import { Typography, Link, IconButton, TextField, Grid, Paper } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+const ListPDFs = () => {
+  const [pdfs, setPdfs] = useState([]);
+
+  const fetchPdfs = async () => {
+    const storageRef = ref(storage, 'pdfs');
+    const listResponse = await listAll(storageRef);
+
+    const urls = await Promise.all(
+      listResponse.items.map(itemRef => getDownloadURL(itemRef))
+    );
+
+    setPdfs(listResponse.items.map((itemRef, index) => ({
+      id: index,
+      name: itemRef.name,
+      url: urls[index],
+    })));
+  };
+
+  useEffect(() => {
+    fetchPdfs();
+  }, []); // Fetch PDFs initially
+
+  const handleNameChange = (e, id) => {
+    const updatedPdfs = pdfs.map(pdf =>
+      pdf.id === id ? { ...pdf, name: e.target.value } : pdf
+    );
+    setPdfs(updatedPdfs);
+  };
+
+  const handleDelete = async (id, name) => {
+    try {
+      const storageRef = ref(storage, `pdfs/${name}`);
+      await deleteObject(storageRef);
+      const updatedPdfs = pdfs.filter(pdf => pdf.id !== id);
+      setPdfs(updatedPdfs);
+    } catch (error) {
+      console.error('Error deleting file:', error);
+    }
+  };
+
+  return (
+    <div>
+      <Typography variant="h4" gutterBottom>
+        PDF Files
+      </Typography>
+      <Grid container spacing={2}>
+        {pdfs.map((pdf) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={pdf.id}>
+            <Paper elevation={3} style={{ padding: '10px', textAlign: 'center' }}>
+              <TextField
+                fullWidth
+                value={pdf.name}
+                onChange={(e) => handleNameChange(e, pdf.id)}
+                variant="outlined"
+                size="small"
+                style={{ marginBottom: '10px' }}
+              />
+              <br />
+              <Link href={pdf.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue', fontWeight: 'bold' }}>
+                View PDF
+              </Link>
+              <br />
+              <IconButton onClick={() => handleDelete(pdf.id, pdf.name)} aria-label="delete" style={{ marginTop: '10px' }}>
+                <DeleteIcon style={{ color: 'red' }} />
+              </IconButton>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
+  );
+};
+
+export default ListPDFs;  
+// committe

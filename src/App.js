@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import UploadPDF from './components/UploadPDF';
+import ListPDFs from './components/ListPDFs';
+// Import your background image
+import Imagess from './components/images/imagess.png';
+const appStyle = {
+  backgroundImage: `url(${Imagess})`,
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  minHeight: '100vh', // Ensure the background covers the entire viewport height
+};
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={appStyle}>
+      <h1 align ="center">Upload and Retrieve PDF Files</h1>
+      <UploadPDF />
+      <ListPDFs />
     </div>
   );
-}
+};
 
 export default App;
