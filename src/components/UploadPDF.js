@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import React, { useState, useEffect } from 'react';
+import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
 import { storage } from '../firebase';
 import {
   Button,
@@ -14,9 +14,11 @@ import {
   createTheme,
   LinearProgress,
   Alert,
-  AlertTitle
+  AlertTitle,
+  MenuItem,
+  Select,
 } from '@mui/material';
-import { CloudUpload } from '@mui/icons-material';
+import { CloudUpload, Refresh } from '@mui/icons-material';
 
 const theme = createTheme({
   palette: {
@@ -45,6 +47,23 @@ const UploadPDF = () => {
   const [uploadMessage, setUploadMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
+  const [folders, setFolders] = useState([]);
+  const [selectedFolder, setSelectedFolder] = useState('');
+
+  useEffect(() => {
+    fetchFolders();
+  }, []);
+
+  const fetchFolders = async () => {
+    try {
+      const storageRef = ref(storage);
+      const allFolders = await listAll(storageRef);
+      const folderNames = allFolders.prefixes.map(folderRef => folderRef.name);
+      setFolders(folderNames);
+    } catch (error) {
+      console.error('Error fetching folders:', error);
+    }
+  };
 
   const handleChange = (e) => {
     if (e.target.files[0]) {
@@ -58,10 +77,10 @@ const UploadPDF = () => {
   };
 
   const handleUpload = () => {
-    if (!file) return;
+    if (!file || !selectedFolder) return;
     setError("");
     setUploadMessage("");
-    const storageRef = ref(storage, `pdfs/${fileName}`);
+    const storageRef = ref(storage, `${selectedFolder}/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -79,9 +98,26 @@ const UploadPDF = () => {
           setUrl(url);
           setUploadMessage("File uploaded successfully!");
           setProgress(0);
+          setFile(null);
+          setFileName("");
         });
       }
     );
+  };
+
+  const handleRefresh = () => {
+    setFile(null);
+    setFileName("");
+    setUrl("");
+    setUploadMessage("");
+    setError("");
+    setProgress(0);
+    document.getElementById('upload-file').value = null; // Reset file input
+    fetchFolders();
+  };
+
+  const handleFolderChange = (e) => {
+    setSelectedFolder(e.target.value);
   };
 
   return (
@@ -126,15 +162,38 @@ const UploadPDF = () => {
                   onChange={handleFileNameChange} // Allow editing of file name
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
+                <Select
+                  label="Select Folder"
+                  value={selectedFolder}
+                  onChange={handleFolderChange}
+                  fullWidth
+                >
+                  {folders.map(folder => (
+                    <MenuItem key={folder} value={folder}>{folder}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12} sm={3}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleUpload}
-                  disabled={!file || !fileName} // Disable upload button if file or file name is not selected
+                  disabled={!file || !fileName || !selectedFolder} // Disable upload button if file, folder, or file name is not selected
                   fullWidth
                 >
                   Upload
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleRefresh}
+                  startIcon={<Refresh />}
+                  fullWidth
+                >
+                  Refresh
                 </Button>
               </Grid>
             </Grid>
@@ -151,22 +210,22 @@ const UploadPDF = () => {
             )}
             {error && (
               <Alert severity="error" sx={{ mt: 2 }}>
-                <AlertTitle>Error</AlertTitle>
-                {error}
-              </Alert>
-            )}
-            {url && (
-              <Box mt={2}>
-                <Link href={url} target="_blank" rel="noopener noreferrer">
-              
-                </Link>
-              </Box>
-            )}
-          </Box>
-        </Paper>
-      </Container>
-    </ThemeProvider>
-  );
+               
+               <AlertTitle>Error</AlertTitle>
+{error}
+</Alert>
+)}
+{url && (
+<Box mt={2}>
+<Link href={url} target="_blank" rel="noopener noreferrer">
+</Link>
+</Box>
+)}
+</Box>
+</Paper>
+</Container>
+</ThemeProvider>
+);
 };
 
 export default UploadPDF;

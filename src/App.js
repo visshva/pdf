@@ -17,7 +17,7 @@ const App = () => {
     <div className="App" style={appStyle}>
       <h1 align ="center">Upload and Retrieve PDF Files</h1>
       <UploadPDF />
-      <ListPDFs />
+ <ListPDFs /> 
     </div>
   );
 };
