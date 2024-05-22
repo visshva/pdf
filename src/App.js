@@ -3,10 +3,10 @@ import React from 'react';
 import UploadPDF from './components/UploadPDF';
 import ListPDFs from './components/ListPDFs';
 // Import your background image
-import Images from './components/images/images.png';
+import Imagess from './components/images/imagess.png';
 
 const appStyle = {
-  backgroundImage: `url(${Images})`,
+  backgroundImage: `url(${Imagess})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
@@ -14,30 +14,24 @@ const appStyle = {
 };
 
 const containerStyle = {
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr', // Create two equal columns
-  gap: '20px', // Space between the columns
+  display: 'flex',
+  flexDirection: 'column', // Stack components vertically
+  gap: '20px', // Space between the components
   padding: '20px',
   width: '100%',
   boxSizing: 'border-box',
 };
 
-const componentStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background for better readability
-  borderRadius: '10px',
-  padding: '20px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-};
 
 const App = () => {
   return (
     <div className="App" style={appStyle}>
       <h1 align="center">CMS</h1>
       <div style={containerStyle}>
-        <div style={componentStyle}>
+        <div >
           <UploadPDF />
         </div>
-        <div style={componentStyle}>
+        <div >
           <ListPDFs />
         </div>
       </div>

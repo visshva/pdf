@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { listAll, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
 import {
-  Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Link, IconButton, Tooltip, TextField, TablePagination, Button, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Chip, Avatar
+  Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Link, IconButton, Tooltip, TextField, TablePagination, Button, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Chip, Divider, Avatar, CircularProgress
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import pdficon from './images/pdficon.svg';
+import DocumentIcon from '@mui/icons-material/Description';
+
 
 const ListPDFs = () => {
   const [folders, setFolders] = useState([]);
@@ -17,6 +19,7 @@ const ListPDFs = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(false);
 
   const fetchFolders = async () => {
     try {
@@ -30,6 +33,7 @@ const ListPDFs = () => {
   };
 
   const fetchPdfs = async (folder) => {
+    setLoading(true);
     try {
       const folderRef = ref(storage, folder);
       const listResponse = await listAll(folderRef);
@@ -51,6 +55,7 @@ const ListPDFs = () => {
     } catch (error) {
       console.error('Error fetching PDFs:', error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -104,10 +109,25 @@ const ListPDFs = () => {
 
   return (
     <Box mt={4} textAlign="center">
-      <Typography variant="h4" gutterBottom>
-        VIEW DOCUMENTS
-      </Typography>
-      <Box sx={{ maxWidth: '1000px', margin: '0 auto', p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: '#f9f9f9' }}>
+           <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ marginBottom: 2 }}
+          >
+            <Avatar sx={{ bgcolor: 'primary.main', mb: 2 }}>
+              <DocumentIcon />
+            </Avatar>
+            <Typography variant="h5" gutterBottom>
+              UPLOAD DOCUMENTS
+            </Typography>
+          
+       
+      
+      </Box>    
+      <Divider sx={{ width: '100%', mb: 2 }} />
+      <Box sx={{ maxWidth: '1000px', margin: '0 auto', p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(0px)' }}>
         <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
           <FormControl variant="outlined" sx={{ width: '30%' }}>
             <InputLabel>Select Folder</InputLabel>
@@ -148,42 +168,48 @@ const ListPDFs = () => {
             Refresh
           </Button>
         </Box>
-        <TableContainer component={Paper} elevation={3} sx={{ borderRadius: 2 }}>
-          <Table size="medium">
-            <TableHead>
-              <TableRow style={{ backgroundColor: '#d32f2f' }}>
-                <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', fontFamily: 'Roboto' }}>File Name</TableCell>
-                <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', textAlign: 'center' }}>View PDF</TableCell>
-                <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', textAlign: 'center' }}>Delete</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredPdfs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((pdf, index) => (
-                <TableRow key={pdf.id} style={{ height: '50px', backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#ffffff' }}>
-                  <TableCell style={{ padding: '10px' }}>
-                    <Typography style={{ fontWeight: 'bold', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {pdf.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell style={{ padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>
-                    <Link href={pdf.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>
-                      <Tooltip title="View PDF" arrow>
-                        <img src={pdficon} alt="PDF Icon" style={{ width: '36px', height: '36px' }} />
-                      </Tooltip>
-                    </Link>
-                  </TableCell>
-                  <TableCell style={{ padding: '10px', textAlign: 'center' }}>
-                    <Tooltip title="Delete PDF" arrow>
-                      <IconButton onClick={() => handleDelete(pdf.id, pdf.name)} aria-label="delete">
-                        <DeleteIcon style={{ color: '#d32f2f', fontSize: 24 }} />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <TableContainer component={Paper} elevation={3} sx={{ borderRadius: 2 }}>
+            <Table size="medium">
+              <TableHead>
+                <TableRow style={{ backgroundColor: '#d32f2f' }}>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', fontFamily: 'Roboto' }}>File Name</TableCell>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', textAlign: 'center' }}>View PDF</TableCell>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: 18, color: 'white', textAlign: 'center' }}>Delete</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {filteredPdfs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((pdf, index) => (
+                  <TableRow key={pdf.id} style={{ height: '50px', backgroundColor: index % 2 === 0 ? '#f7f7f7' : '#ffffff' }}>
+                    <TableCell style={{ padding: '10px' }}>
+                      <Typography style={{ fontWeight: 'bold', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {pdf.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell style={{ padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>
+                      <Link href={pdf.url} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'blue' }}>
+                        <Tooltip title="View PDF" arrow>
+                          <img src={pdficon} alt="PDF Icon" style={{ width: '36px', height: '36px' }} />
+                        </Tooltip>
+                      </Link>
+                    </TableCell>
+                    <TableCell style={{ padding: '10px', textAlign: 'center' }}>
+                      <Tooltip title="Delete PDF" arrow>
+                        <IconButton onClick={() => handleDelete(pdf.id, pdf.name)} aria-label="delete">
+                          <DeleteIcon style={{ color: '#d32f2f', fontSize: 24 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -199,4 +225,3 @@ const ListPDFs = () => {
 };
 
 export default ListPDFs;
-

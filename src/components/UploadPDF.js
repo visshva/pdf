@@ -168,14 +168,15 @@ const UploadPDF = () => {
 
   return (
     <Container maxWidth="md">
-      <Card sx={{ marginTop:4, borderRadius: 2, boxShadow: 3 }}>
+      <Card sx={{ marginTop:2, borderRadius: 1, boxShadow: 0 ,}}>
         <CardContent>
           <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            sx={{ marginBottom: 2 }}
+            sx={{ marginBottom: 2 ,height: '500px', // Set a fixed height for the container
+         }}
           >
             <Avatar sx={{ bgcolor: 'primary.main', mb: 2 }}>
               <UploadIcon />
@@ -185,57 +186,66 @@ const UploadPDF = () => {
             </Typography>
             <Divider sx={{ width: '100%', mb: 2 }} />
             <Box display="flex" justifyContent="space-between" width="100%">
-              
-                <TextField sx={{ width: '50%' }}
-                  label="New Folder Name"
-                  variant="outlined"
-                  fullWidth
-                  value={newFolderName}
-                  onChange={handleNewFolderChange}
-                />
-                <IconButton
-                  color="primary"
-                  onClick={handleCreateNewFolder}
-                  sx={{ ml: 1 }}
-                >
-                  <CreateNewFolder />
-                </IconButton>
-             
-              
-                <Autocomplete sx={{ width: '50%' }}
-                  options={folders}
-                  value={folderToDelete}
-                  onChange={(event, value) => handleFolderToDeleteChange(event, value)}
-                  renderInput={(params) => (
-                    <TextField 
-                      {...params}
-                      label="Select Folder to Delete"
-                      variant="outlined"
-                      fullWidth
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <ListItem {...props}>
-                      <ListItemAvatar>
-                        <Avatar sx={{ bgcolor: 'error.main' }}>
-                          <Folder />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={option} />
-                    </ListItem>
-                  )}
-                  PaperComponent={({ children }) => (
-                    <Paper style={{ background:                  '#f5f5f5', width: '100%' }}>{children}</Paper>
-                  )}
-                />
-                <IconButton
-                  color="secondary"
-                  onClick={handleDeleteFolder}
-                  sx={{ ml: 1 }}
-                >
-                  <Delete />
-                </IconButton>
-             
+              <TextField
+                sx={{ width: '50%' }}
+                label="New Folder Name"
+                variant="outlined"
+                fullWidth
+                value={newFolderName}
+                onChange={handleNewFolderChange}
+              />
+              <IconButton
+                color="primary"
+                onClick={handleCreateNewFolder}
+                sx={{ ml: 1 }}
+              >
+                <CreateNewFolder />
+              </IconButton>
+              <Autocomplete
+                sx={{ width: '50%' }}
+                options={folders}
+                value={folderToDelete}
+                onChange={(event, value) => handleFolderToDeleteChange(event, value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Folder to Delete"
+                    variant="outlined"
+                    fullWidth
+                  />
+                )}
+                renderOption={(props, option) => (
+                  <ListItem {...props}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: 'error.main' }}>
+                        <Folder />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={option} />
+                  </ListItem>
+                )}
+                PaperComponent={({ children }) => (
+                  <Paper style={{ background: '#f5f5f5', width: '100%' }}>{children}</Paper>
+                )}
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: 'offset',
+                      options: {
+                        offset: [0, 5], // Adjust the offset as needed
+                      },
+                    },
+                  ],
+                }}
+              />
+            <IconButton
+  color="error"
+  onClick={handleDeleteFolder}
+  sx={{ ml: 1 }}
+>
+  <Delete />
+</IconButton>
+
             </Box>
             <Box mb={2}></Box>
             <input
@@ -269,7 +279,7 @@ const UploadPDF = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-              <Autocomplete
+                <Autocomplete
                   options={folders}
                   value={selectedFolder}
                   onChange={handleFolderChange}
@@ -284,7 +294,7 @@ const UploadPDF = () => {
                   renderOption={(props, option) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
-                        <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>
                           <Folder />
                         </Avatar>
                       </ListItemAvatar>
@@ -299,11 +309,16 @@ const UploadPDF = () => {
               <Grid item xs={12} sm={6}>
                 <Button
                   variant="contained"
-                  color="primary"
                   onClick={handleUpload}
                   disabled={!file || !fileName || !selectedFolder}
                   fullWidth
-                  sx={{ bgcolor: 'success.main', '&:hover': { bgcolor: 'success.dark' } }}
+                  sx={{
+                    bgcolor: 'blue',
+                    color: 'white',
+                    '&:hover': {
+                      bgcolor: 'green',
+                    },
+                  }}
                 >
                   Upload
                 </Button>
@@ -345,4 +360,3 @@ const UploadPDF = () => {
 };
 
 export default UploadPDF;
-
