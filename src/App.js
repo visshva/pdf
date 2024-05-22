@@ -3,9 +3,9 @@ import React from 'react';
 import UploadPDF from './components/UploadPDF';
 import ListPDFs from './components/ListPDFs';
 // Import your background image
-import Imagess from './components/images/imagess.png';
+import Images from './components/images/images.png';
 const appStyle = {
-  backgroundImage: `url(${Imagess})`,
+  backgroundImage: `url(${Images})`,
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center',
