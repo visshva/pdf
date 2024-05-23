@@ -1,0 +1,62 @@
+.header {
+    background-color: #fff; /* Or your desired background color */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; /* Optional: Set a maximum width for responsiveness */
+    margin: 0 auto; /* Optional: Center the header horizontally */
+  }
+  
+  .logo {
+    flex: 1; /* Optional: Adjust logo width if needed */
+  }
+  
+  .logo img {
+    width: 150px; /* Or your desired logo width */
+    height: auto;
+  }
+  
+  .university-name {
+    margin-left: 10px; /* Adjust spacing between logo and name */
+  }
+  
+  .nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  .nav li {
+    margin-right: 20px; /* Adjust spacing between navigation links */
+  }
+  
+  .nav a {
+    text-decoration: none;
+    color: #333; /* Or your desired link color */
+  }
+  
+  .search {
+    position: relative; /* For positioning the search icon */
+  }
+  
+  .search input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .search img {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY
+  
