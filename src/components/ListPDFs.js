@@ -2,47 +2,71 @@ import React, { useEffect, useState } from 'react';
 import { listAll, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
 import {
-  Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Link, IconButton, Tooltip, TextField, TablePagination, Button
+  Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Link, IconButton, Tooltip, TextField, TablePagination, Button, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Chip, Avatar
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import pdficon from './images/pdficon.svg';
 
 const ListPDFs = () => {
+  const [folders, setFolders] = useState([]);
+  const [selectedFolder, setSelectedFolder] = useState('');
   const [pdfs, setPdfs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const fetchPdfs = async () => {
-    const storageRef = ref(storage, 'pdfs');
-    const listResponse = await listAll(storageRef);
+  const fetchFolders = async () => {
+    try {
+      const storageRef = ref(storage);
+      const result = await listAll(storageRef);
+      const folderNames = result.prefixes.map(prefix => prefix.name);
+      setFolders(folderNames);
+    } catch (error) {
+      console.error('Error fetching folders:', error);
+    }
+  };
 
-    const urls = await Promise.all(
-      listResponse.items.map(itemRef => getDownloadURL(itemRef))
-    );
+  const fetchPdfs = async (folder) => {
+    try {
+      const folderRef = ref(storage, folder);
+      const listResponse = await listAll(folderRef);
 
-    const pdfData = listResponse.items.map((itemRef, index) => ({
-      id: index,
-      name: itemRef.name,
-      url: urls[index],
-    }));
+      const urls = await Promise.all(
+        listResponse.items.map(itemRef => getDownloadURL(itemRef))
+      );
 
-    // Sort the PDFs array alphabetically based on the name
-    pdfData.sort((a, b) => a.name.localeCompare(b.name));
+      const pdfData = listResponse.items.map((itemRef, index) => ({
+        id: index,
+        name: itemRef.name,
+        url: urls[index],
+      }));
 
-    setPdfs(pdfData);
+      // Sort the PDFs array alphabetically based on the name
+      pdfData.sort((a, b) => a.name.localeCompare(b.name));
+
+      setPdfs(pdfData);
+    } catch (error) {
+      console.error('Error fetching PDFs:', error);
+    }
   };
 
   useEffect(() => {
-    fetchPdfs();
+    fetchFolders();
   }, []);
+
+  useEffect(() => {
+    if (selectedFolder) {
+      fetchPdfs(selectedFolder);
+    }
+  }, [selectedFolder]);
 
   const handleDelete = async (id, name) => {
     try {
-      const storageRef = ref(storage, `pdfs/${name}`);
-      await deleteObject(storageRef);
+      const fileRef = ref(storage, `${selectedFolder}/${name}`);
+      await deleteObject(fileRef);
       const updatedPdfs = pdfs.filter(pdf => pdf.id !== id);
       setPdfs(updatedPdfs);
     } catch (error) {
@@ -55,7 +79,9 @@ const ListPDFs = () => {
   };
 
   const handleRefresh = () => {
-    fetchPdfs();
+    if (selectedFolder) {
+      fetchPdfs(selectedFolder);
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -67,6 +93,11 @@ const ListPDFs = () => {
     setPage(0);
   };
 
+  const handleFolderChange = (event) => {
+    setSelectedFolder(event.target.value);
+    setPage(0); // Reset pagination when folder changes
+  };
+
   const filteredPdfs = pdfs.filter(pdf =>
     pdf.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -74,10 +105,35 @@ const ListPDFs = () => {
   return (
     <Box mt={4} textAlign="center">
       <Typography variant="h4" gutterBottom>
-        View Uploaded Documents
+        VIEW DOCUMENTS
       </Typography>
       <Box sx={{ maxWidth: '1000px', margin: '0 auto', p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: '#f9f9f9' }}>
         <Box mb={2} display="flex" justifyContent="space-between" alignItems="center">
+          <FormControl variant="outlined" sx={{ width: '30%' }}>
+            <InputLabel>Select Folder</InputLabel>
+            <Select
+              value={selectedFolder}
+              onChange={handleFolderChange}
+              input={<OutlinedInput label="Select Folder" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar sx={{ bgcolor: 'primary.main', mr: 1 }}>
+                    <FolderOpenIcon />
+                  </Avatar>
+                  <Chip label={selected} />
+                </Box>
+              )}
+            >
+              {folders.map((folder, index) => (
+                <MenuItem key={index} value={folder}>
+                  <Avatar sx={{ bgcolor: 'primary.main', mr: 1 }}>
+                    <FolderOpenIcon />
+                  </Avatar>
+                  {folder}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             variant="outlined"
             placeholder="Search PDFs"
@@ -86,7 +142,7 @@ const ListPDFs = () => {
             InputProps={{
               startAdornment: <SearchIcon />
             }}
-            sx={{ width: '70%' }}
+            sx={{ width: '50%' }}
           />
           <Button variant="contained" color="primary" onClick={handleRefresh} startIcon={<RefreshIcon />}>
             Refresh
@@ -143,3 +199,4 @@ const ListPDFs = () => {
 };
 
 export default ListPDFs;
+

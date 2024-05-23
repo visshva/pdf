@@ -1,54 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { ref, uploadBytesResumable, getDownloadURL, listAll } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
 import {
   Button,
   Box,
   Typography,
-  Link,
   TextField,
   Grid,
   Container,
-  Paper,
-  ThemeProvider,
-  createTheme,
   LinearProgress,
   Alert,
   AlertTitle,
-  MenuItem,
-  Select,
+  Autocomplete,
+  Card,
+  CardContent,
+  Divider,
+  Avatar,
+  IconButton,
+  Paper,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
 } from '@mui/material';
-import { CloudUpload, Refresh } from '@mui/icons-material';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-        },
-      },
-    },
-  },
-});
+import { CloudUpload, Refresh, CreateNewFolder, Delete, Folder } from '@mui/icons-material';
+import UploadIcon from '@mui/icons-material/UploadFile';
 
 const UploadPDF = () => {
   const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState(""); // State to store file name
-  const [url, setUrl] = useState("");
+  const [fileName, setFileName] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState('');
+  const [newFolderName, setNewFolderName] = useState('');
+  const [folderToDelete, setFolderToDelete] = useState('');
 
   useEffect(() => {
     fetchFolders();
@@ -68,12 +54,12 @@ const UploadPDF = () => {
   const handleChange = (e) => {
     if (e.target.files[0]) {
       setFile(e.target.files[0]);
-      setFileName(e.target.files[0].name); // Set the file name
+      setFileName(e.target.files[0].name);
     }
   };
 
   const handleFileNameChange = (e) => {
-    setFileName(e.target.value); // Update the file name
+    setFileName(e.target.value);
   };
 
   const handleUpload = () => {
@@ -95,11 +81,11 @@ const UploadPDF = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setUrl(url);
           setUploadMessage("File uploaded successfully!");
           setProgress(0);
           setFile(null);
           setFileName("");
+          fetchFolders();
         });
       }
     );
@@ -108,31 +94,150 @@ const UploadPDF = () => {
   const handleRefresh = () => {
     setFile(null);
     setFileName("");
-    setUrl("");
     setUploadMessage("");
     setError("");
     setProgress(0);
-    document.getElementById('upload-file').value = null; // Reset file input
+    document.getElementById('upload-file').value = null;
     fetchFolders();
   };
 
-  const handleFolderChange = (e) => {
-    setSelectedFolder(e.target.value);
+  const handleFolderChange = (event, value) => {
+    setSelectedFolder(value);
+  };
+
+  const handleNewFolderChange = (event) => {
+    setNewFolderName(event.target.value);
+  };
+
+  const handleFolderToDeleteChange = (event, value) => {
+    setFolderToDelete(value);
+  };
+
+  const handleCreateNewFolder = async () => {
+    try {
+      if (newFolderName.trim() === '') {
+        setError("Folder name cannot be empty");
+        return;
+      }
+  
+      const newFolderPath = `${newFolderName}/placeholder.txt`; // Create a placeholder file
+      const newFolderRef = ref(storage, newFolderPath);
+      await uploadBytesResumable(newFolderRef, new Blob([''])); // Upload an empty blob as the placeholder file
+      setNewFolderName('');
+      fetchFolders();
+      setUploadMessage(`Folder "${newFolderName}" created successfully!`);
+    } catch (error) {
+      console.error('Error creating folder:', error);
+      setError("Error creating folder. Please try again.");
+    }
+  };
+
+  const handleDeleteFolder = async () => {
+    if (!folderToDelete.trim()) {
+      setError("Please select a folder to delete.");
+      return;
+    }
+    try {
+      setError("");
+      setUploadMessage("");
+      const folderRef = ref(storage, folderToDelete);
+      await deleteFolderContents(folderRef);
+      fetchFolders();
+      setUploadMessage(`Folder "${folderToDelete}" deleted successfully!`);
+      setFolderToDelete('');
+    } catch (error) {
+      console.error('Error deleting folder:', error);
+      setError("Error deleting folder. Please try again.");
+    }
+  };
+
+  const deleteFolderContents = async (folderRef) => {
+    const folderContents = await listAll(folderRef);
+    const deletePromises = [];
+
+    for (const itemRef of folderContents.items) {
+      deletePromises.push(deleteObject(itemRef));
+    }
+
+    for (const subFolderRef of folderContents.prefixes) {
+      deletePromises.push(deleteFolderContents(subFolderRef));
+    }
+
+    await Promise.all(deletePromises);
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container maxWidth="sm">
-        <Paper elevation={20} sx={{ padding: 4, marginTop: 4 }}>
+    <Container maxWidth="md">
+      <Card sx={{ marginTop:4, borderRadius: 2, boxShadow: 3 }}>
+        <CardContent>
           <Box
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
+            sx={{ marginBottom: 2 }}
           >
-            <Typography variant="h4" gutterBottom>
-              Upload Documents
+            <Avatar sx={{ bgcolor: 'primary.main', mb: 2 }}>
+              <UploadIcon />
+            </Avatar>
+            <Typography variant="h5" gutterBottom>
+              UPLOAD DOCUMENTS
             </Typography>
+            <Divider sx={{ width: '100%', mb: 2 }} />
+            <Box display="flex" justifyContent="space-between" width="100%">
+              
+                <TextField sx={{ width: '50%' }}
+                  label="New Folder Name"
+                  variant="outlined"
+                  fullWidth
+                  value={newFolderName}
+                  onChange={handleNewFolderChange}
+                />
+                <IconButton
+                  color="primary"
+                  onClick={handleCreateNewFolder}
+                  sx={{ ml: 1 }}
+                >
+                  <CreateNewFolder />
+                </IconButton>
+             
+              
+                <Autocomplete sx={{ width: '50%' }}
+                  options={folders}
+                  value={folderToDelete}
+                  onChange={(event, value) => handleFolderToDeleteChange(event, value)}
+                  renderInput={(params) => (
+                    <TextField 
+                      {...params}
+                      label="Select Folder to Delete"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  )}
+                  renderOption={(props, option) => (
+                    <ListItem {...props}>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: 'error.main' }}>
+                          <Folder />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={option} />
+                    </ListItem>
+                  )}
+                  PaperComponent={({ children }) => (
+                    <Paper style={{ background:                  '#f5f5f5', width: '100%' }}>{children}</Paper>
+                  )}
+                />
+                <IconButton
+                  color="secondary"
+                  onClick={handleDeleteFolder}
+                  sx={{ ml: 1 }}
+                >
+                  <Delete />
+                </IconButton>
+             
+            </Box>
+            <Box mb={2}></Box>
             <input
               accept="application/pdf"
               style={{ display: 'none' }}
@@ -148,6 +253,7 @@ const UploadPDF = () => {
                     component="span"
                     startIcon={<CloudUpload />}
                     fullWidth
+                    sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
                   >
                     Choose File
                   </Button>
@@ -159,36 +265,53 @@ const UploadPDF = () => {
                   variant="outlined"
                   fullWidth
                   value={fileName}
-                  onChange={handleFileNameChange} // Allow editing of file name
+                  onChange={handleFileNameChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+              <Autocomplete
+                  options={folders}
+                  value={selectedFolder}
+                  onChange={handleFolderChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Folder"
+                      variant="outlined"
+                      fullWidth
+                    />
+                  )}
+                  renderOption={(props, option) => (
+                    <ListItem {...props}>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                          <Folder />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={option} />
+                    </ListItem>
+                  )}
+                  PaperComponent={({ children }) => (
+                    <Paper style={{ background: '#f5f5f5' }}>{children}</Paper>
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Select
-                  label="Select Folder"
-                  value={selectedFolder}
-                  onChange={handleFolderChange}
-                  fullWidth
-                >
-                  {folders.map(folder => (
-                    <MenuItem key={folder} value={folder}>{folder}</MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-              <Grid item xs={12} sm={3}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={handleUpload}
-                  disabled={!file || !fileName || !selectedFolder} // Disable upload button if file, folder, or file name is not selected
+                  disabled={!file || !fileName || !selectedFolder}
                   fullWidth
+                  sx={{ bgcolor: 'success.main', '&:hover': { bgcolor: 'success.dark' } }}
                 >
                   Upload
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={6}>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  sx={{ bgcolor: 'error.main', '&:hover': { bgcolor: 'error.dark' } }}
                   onClick={handleRefresh}
                   startIcon={<Refresh />}
                   fullWidth
@@ -210,22 +333,16 @@ const UploadPDF = () => {
             )}
             {error && (
               <Alert severity="error" sx={{ mt: 2 }}>
-               
-               <AlertTitle>Error</AlertTitle>
-{error}
-</Alert>
-)}
-{url && (
-<Box mt={2}>
-<Link href={url} target="_blank" rel="noopener noreferrer">
-</Link>
-</Box>
-)}
-</Box>
-</Paper>
-</Container>
-</ThemeProvider>
-);
+                <AlertTitle>Error</AlertTitle>
+                {error}
+              </Alert>
+            )}
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
+  );
 };
 
 export default UploadPDF;
+
