@@ -1,0 +1,27 @@
+.slider-container {
+    width: 500px; /* Adjust the width as needed */
+    height: 80px; /* Adjust the height as needed */
+    overflow: hidden;
+  }
+  
+  .slider-content {
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 20s infinite linear;
+  }
+  
+  .slider-content img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px; /* Adjust the spacing between images */
+  }
+  
+  @keyframes slideUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  
