@@ -6,14 +6,8 @@ import { styled } from '@mui/system';
 import "./styles.css";
 import { Menu as Event, LibraryBooks, PhotoLibrary, EmojiEvents } from '@mui/icons-material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import VerticalImageSlider from  './VerticalImageSlider.css';
-import SchoolIcon from '@mui/icons-material/School';
-import ScienceIcon from '@mui/icons-material/Science';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import InfoIcon from '@mui/icons-material/Info';
 import AccountCircle from '@mui/icons-material/AccountCircle'; 
-
+import { Poppins } from '@fontsource/poppins';
 
 
 
@@ -144,16 +138,17 @@ const Header = () => {
     };
     const texts = [
         <div  style={{ fontWeight: 'bold'}}>
-  <span style={{ fontSize: '40px', fontWeight: 'bold' }}>P</span>UDUHERRY 
-  <span style={{ fontSize: '40px', fontWeight: 'bold' }}>T</span>ECHNOLOGICAL 
-  <span style={{ fontSize: '40px', fontWeight: 'bold' }}>U</span>NIVERSITY <br/>
+  <span style={{ fontSize: '40px', fontWeight: 'bold' }}>P</span>UDUCHERRY   <span style={{ fontSize: '40px', fontWeight: 'bold' }}>T</span>ECHNOLOGICAL    <span style={{ fontSize: '40px', fontWeight: 'bold' }}>U</span>NIVERSITY <br/>
   <center style={{ fontSize: '20px', fontFamily: 'Poppins' }}>PUDUCHERRY </center>
 </div>,   
  <div  style={{ fontWeight: 'bold'}}>
   <span style={{ fontSize: '22px', fontWeight: 'bold' }}>புதுச்சேரி தொழில்நுட்பப் பல்கலைக்கழகம்</span> 
    <br/>
   <center style={{ fontSize: '20px', fontFamily: 'Poppins' }}>புதுச்சேரி</center>
-</div>, <div  style={{ fontWeight: 'bold'}}>
+</div>,
+
+
+<div  style={{ fontWeight: 'bold'}}>
   <span style={{ fontSize: '22px', fontWeight: 'bold' }}>पुडुचेरी प्रौद्योगिकी विश्वविद्यालय</span> 
    <br/>
   <center style={{ fontSize: '20px', fontFamily: 'Poppins' }}>पुडुचेरी</center>
@@ -175,7 +170,7 @@ const Header = () => {
                             alignItems: 'center',
                             bgcolor: 'error.main',
                             color: 'white',
-                            padding: 2,
+                            padding:1,
                             borderRadius: 1,
                             width: '100%',
                         }}
@@ -286,12 +281,12 @@ const Header = () => {
         </Box>
         <Box sx={{ p: 2, pr: 0 }}>
             <a href='https://ptuniv.edu.in/' target="_blank" rel="noopener noreferrer">
-                <img src="./nba.jpg" alt="Company Logo" style={{ width: 150, height: 150 }} />
+                <img src="./nba.png" alt="Company Logo" style={{ width: 150, height: 150 }} />
             </a>
         </Box>
         <Box sx={{ p: 2, pt: 0, pb: 4 }}>
             <a href='https://ptuniv.edu.in/' target="_blank" rel="noopener noreferrer">
-                <img src="./nirf.jpg" alt="Company Logo" style={{ width: 170, height: 150 }} />
+                <img src="./nirf.png" alt="Company Logo" style={{ width: 170, height: 150 }} />
             </a>
         </Box>
     </Box>
@@ -378,6 +373,7 @@ const Header = () => {
               </Button>
             </Box>
           </Container>
+          
         </Toolbar>
       </GradientAppBar>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import UploadPDF from './components/UploadPDF';
 import ListPDFs from './components/ListPDFs';
+import AnnouncementBanner from './components/AnnouncementBar';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import backgroundImage from './components/images/ptu.jpg';
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/contact" element={<div>Contact Us</div>} />
           </Routes>
         <ListPDFs />
+        <AnnouncementBanner />
         </div>
         <Footer />
       </div>
