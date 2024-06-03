@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
-
+import Upload from './Upload';
 import {
   Button,
   Box,
@@ -172,7 +172,7 @@ const UploadPDF = () => {
   };
   
   return (
-    
+    <>
     <Container maxWidth="md">
       <Card sx={{ marginTop:2, borderRadius: 1, boxShadow: 0 ,}}>
         <CardContent>
@@ -362,6 +362,8 @@ const UploadPDF = () => {
         </CardContent>
       </Card>
     </Container>
+    <Upload/>
+</>
   );
 };
 

@@ -1,5 +1,5 @@
 
-import { initializeApp } from 'firebase/app';
+import firebase from "firebase/compat/app";
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -13,7 +13,7 @@ const firebaseConfig = {
     appId: "1:399729857158:web:f77a2a3736937a394b3707",
     measurementId: "G-GMC1T2NSY3"
 };
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
 
 

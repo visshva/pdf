@@ -8,7 +8,8 @@ import { Menu as Event, LibraryBooks, PhotoLibrary, EmojiEvents } from '@mui/ico
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AccountCircle from '@mui/icons-material/AccountCircle'; 
 import { Poppins } from '@fontsource/poppins';
-
+import videoSource from './video/ptu.mp4'; 
+import ImageVideoSlider from './Slider';
 
 
 
@@ -376,7 +377,8 @@ const Header = () => {
           
         </Toolbar>
       </GradientAppBar>
-
+      < ImageVideoSlider />
+    
         </>
     );
 };

@@ -126,7 +126,7 @@
     margin-right: 10px;
   }
   .footer-area .footer-center {
-    margin-top: 100px; /* Adjust this value to your preference */
+    margin-top: 140px; /* Adjust this value to your preference */
   }
   /* Add these styles to your Footer.css file */
 .social-icon {
@@ -187,3 +187,4 @@
 .text-yellow-500 {
   color: #f59e0b;
 }
+

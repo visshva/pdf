@@ -1,14 +1,15 @@
-// MyComponent.js
-
 import React from 'react';
-
-const MyComponent = () => {
+import videoSource from './video/ptu.mp4'; 
+import ImageVideoSlider from './Slider';
+import Upload from './Upload';
+const BackgroundVideo = () => {
   return (
-    <div>
-      <h1>Hello, world!</h1>
-      <p>This is a React component.</p>
-    </div>
+    <div className="video-container">
+    
+   
+  </div>
+  
   );
-};
+}
 
-export default MyComponent;
+export default BackgroundVideo  ;
