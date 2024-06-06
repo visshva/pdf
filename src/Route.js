@@ -4,11 +4,20 @@ import Iqac from './components/iqac';
 import ListPDFs from './components/ListPDFs';
 import AnnouncementBanner from './components/AnnouncementBar';
 import Header from './components/Header';
+import Atr from './components/atr';
+import Nirf from './components/nirf';
+import Naac from './components/naac';
+import Nba from './components/nba';
+import Mou from './components/mou';
+import Committee from './components/committee';
+import IqacEvents from './components/iqacevents';
+import FeedbackPolicy from './components/feedbackpolicy';
 import Footer from './components/Footer';
 import ImageVideoSlider from './components/Slider';
 import Upload from './components/Upload';
+import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Slider } from '@mui/material';
+import LoginRegister from './components/LoginRegister';
 
 
 const containerStyle = {
@@ -35,6 +44,16 @@ const Routing = () => {
             <Route path="/ListPDFs" element={<ListPDFs />} />
             <Route path="/Slider" element={<ImageVideoSlider/>} />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/Navbar" element={< Navbar/>} />
+            <Route path="/Mou" element={< Mou/>} />
+            <Route path="/Atr" element={< Atr folder="ATR"  />} />
+            <Route path="/Nirf" element={< Nirf folder="NIRF"  />} />
+            <Route path="/Naac" element={< Naac folder="NAAC"  />} />
+            <Route path="/Nba" element={< Nba folder="NBA"  />} />
+            <Route path="/Committee" element={< Committee folder="COMMITTEE"  />} />
+            <Route path="/IqacEvents" element={< IqacEvents folder="IQACEVENTS"  />} />
+            <Route path="/FeedbackPolicy" element={< FeedbackPolicy folder="PTU FEEBACK POLICY"  />} />
+            <Route path="/LoginRegister" element={< LoginRegister/>} />
           </Routes>
        
      

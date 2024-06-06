@@ -1,7 +1,12 @@
+// src/components/Upload.js
 import React, { useState, useEffect } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
-import { Button, LinearProgress, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, LinearProgress, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { storage } from '../firebase';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
 const Upload = () => {
   const [file, setFile] = useState(null);
@@ -9,6 +14,8 @@ const Upload = () => {
   const [uploading, setUploading] = useState(false);
   const [mediaList, setMediaList] = useState([]);
   const [mediaType, setMediaType] = useState('all');
+  const [currentIndex, setCurrentIndex] = useState(0); // Index of currently displayed media
+  const [autoSlideInterval, setAutoSlideInterval] = useState(5000); // Auto-slide interval in milliseconds
 
   useEffect(() => {
     const fetchMediaList = async () => {
@@ -33,12 +40,23 @@ const Upload = () => {
     fetchMediaList();
   }, []);
 
+  // Function to handle auto-sliding
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      // Increment currentIndex and loop back to 0 if it reaches the end
+      setCurrentIndex(currentIndex === mediaList.length - 1 ? 0 : currentIndex + 1);
+    }, autoSlideInterval);
+
+    // Clear the interval when component unmounts to prevent memory leaks
+    return () => clearInterval(slideInterval);
+  }, [currentIndex, mediaList, autoSlideInterval]);
+
   const handleUpload = () => {
     if (!file) return;
 
     const fileType = file.type.includes('video') ? 'video' : 'image';
 
-    if (fileType !== mediaType) {
+    if (fileType !== mediaType && mediaType !== 'all') {
       // Display an error message to the user
       console.error(`Selected file type (${fileType}) does not match the chosen media type (${mediaType})`);
       return;
@@ -86,6 +104,26 @@ const Upload = () => {
     setMediaType(event.target.value);
   };
 
+  const handleSlideLeft = () => {
+    setCurrentIndex(currentIndex === 0 ? mediaList.length - 1 : currentIndex - 1);
+  };
+
+  const handleSlideRight = () => {
+    setCurrentIndex(currentIndex === mediaList.length - 1 ? 0 : currentIndex + 1);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    nextArrow: <IconButton onClick={handleSlideRight}><ArrowForward /></IconButton>,
+    prevArrow: <IconButton onClick={handleSlideLeft}><ArrowBack /></IconButton>
+  };
+
   return (
     <div>
       <Typography variant="h5" gutterBottom>
@@ -99,7 +137,7 @@ const Upload = () => {
           value={mediaType}
           onChange={handleMediaTypeChange}
         >
-   
+          <MenuItem value="all">All</MenuItem>
           <MenuItem value="image">Image</MenuItem>
           <MenuItem value="video">Video</MenuItem>
         </Select>
@@ -135,6 +173,22 @@ const Upload = () => {
         {uploading ? 'Uploading...' : 'Upload'}
       </Button>
       <Typography variant="h6" style={{ marginTop: 32 }}>Uploaded Media</Typography>
+      {mediaList.length > 0 && (
+        <Slider {...settings} style={{ marginTop: 16 }}>
+          {mediaList.map((media, index) => (
+            <div key={index}>
+              {media.type === 'image' ? (
+                <img src={media.url} alt={`media-${index}`} style={{ maxWidth: '100%' }} />
+              ) : (
+                <video controls style={{ maxWidth: '100%' }} muted>
+                  <source src={media.url} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+            </div>
+          ))}
+        </Slider>
+      )}
       <TableContainer component={Paper} style={{ marginTop: 16 }}>
         <Table>
           <TableHead>
@@ -145,7 +199,7 @@ const Upload = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {mediaList.filter(media => mediaType === 'all' || media.type === mediaType).map((media, index) => (
+            {mediaList.map((media, index) => (
               <TableRow key={index}>
                 <TableCell>{media.type}</TableCell>
                 <TableCell>{media.url}</TableCell>

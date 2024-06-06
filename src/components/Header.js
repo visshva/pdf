@@ -11,7 +11,7 @@ import { Poppins } from '@fontsource/poppins';
 import videoSource from './video/ptu.mp4'; 
 import ImageVideoSlider from './Slider';
 
-
+import Navbar from './Navbar';
 
 const GradientAppBar = styled(AppBar)({
     background: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
@@ -161,6 +161,8 @@ const Header = () => {
    
 
 
+      
+
     return (
         <>
             <AppBar position="static" color="error">
@@ -187,7 +189,7 @@ const Header = () => {
                      <Box sx={{ display: { xs: 'none', md: 'flex' },   ml: 'auto', flexGrow: 1, justifyContent: 'center' }}>
                      <Button 
     component={RouterLink} 
-    to="/iqac-events" 
+    to="/iqacevents" 
     color="inherit" 
     startIcon={<Event />}
     sx={{ 
@@ -297,87 +299,10 @@ const Header = () => {
 
 
 
-             <GradientAppBar position="static">
-        <Toolbar>
-          <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton color="inherit" onClick={handleMenuOpen}>
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              >
-                <MenuItem component={RouterLink} to="/iqac-events" onClick={handleMenuClose}>
-                  <Event sx={{ mr: 1 }} /> IQAC EVENTS
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/mous" onClick={handleMenuClose}>
-                  <LibraryBooks sx={{ mr: 1 }} /> MoUs
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/gallery" onClick={handleMenuClose}>
-                  <PhotoLibrary sx={{ mr: 1 }} /> GALLERY
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/awards" onClick={handleMenuClose}>
-                  <EmojiEvents sx={{ mr: 1 }} /> AWARDS
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/contact" onClick={handleMenuClose}>
-                  <ContactMail sx={{ mr: 1 }} /> CONTACT
-                </MenuItem>
-                <MenuItem component={RouterLink} to="/admin" onClick={handleMenuClose}>
-                  <AccountCircle sx={{ mr: 1 }} /> ADMIN
-                </MenuItem>
-              </Menu>
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                <NavButton component={RouterLink} to="/" sx={{ marginRight: 2 }}>
-                  Home
-                </NavButton>
-                <NavButton component={RouterLink} to="/about" sx={{ marginRight: 2 }}>
-                  About
-                </NavButton>
-                <NavButton onClick={handleSubmenuOpen} sx={{ marginRight: 2 }}>
-                  Services
-                </NavButton>
-                <Menu
-                  anchorEl={submenuAnchorEl}
-                  open={Boolean(submenuAnchorEl)}
-                  onClose={handleSubmenuClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                >
-                  <MenuItem component={RouterLink} to="/services/consulting" onClick={handleSubmenuClose}>
-                    Consulting
-                  </MenuItem>
-                  <MenuItem component={RouterLink} to="/services/training" onClick={handleSubmenuClose}>
-                    Training
-                  </MenuItem>
-                  <MenuItem component={RouterLink} to="/services/support" onClick={handleSubmenuClose}>
-                    Support
-                  </MenuItem>
-                </Menu>
-                <NavButton component={RouterLink} to="/contact">
-                  Contact
-                </NavButton>
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                color="inherit"
-                component={RouterLink}
-                to="/contact"
-                startIcon={<AccountCircle />}
-                sx={{ color: '#fff' }}
-              >
-                ADMIN
-              </Button>
-            </Box>
-          </Container>
           
-        </Toolbar>
-      </GradientAppBar>
-      < ImageVideoSlider />
+         
+          < Navbar/>
+
     
         </>
     );
