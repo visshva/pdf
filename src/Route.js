@@ -8,7 +8,10 @@ import Atr from './components/atr';
 import Nirf from './components/nirf';
 import Naac from './components/naac';
 import Nba from './components/nba';
-import Mou from './components/mou';
+import Login from './components/Login';
+import Register from './components/Register';
+import Dashboard from './components/Dashboard';
+
 import Committee from './components/committee';
 import IqacEvents from './components/iqacevents';
 import FeedbackPolicy from './components/feedbackpolicy';
@@ -17,7 +20,7 @@ import ImageVideoSlider from './components/Slider';
 import Upload from './components/Upload';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginRegister from './components/LoginRegister';
+
 
 
 const containerStyle = {
@@ -45,7 +48,9 @@ const Routing = () => {
             <Route path="/Slider" element={<ImageVideoSlider/>} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/Navbar" element={< Navbar/>} />
-            <Route path="/Mou" element={< Mou/>} />
+            <Route path="/Login" element={< Login/>} />
+            <Route path="/Register" element={< Register/>} />
+            <Route path="/Dashboard" element={< Dashboard/>} />
             <Route path="/Atr" element={< Atr folder="ATR"  />} />
             <Route path="/Nirf" element={< Nirf folder="NIRF"  />} />
             <Route path="/Naac" element={< Naac folder="NAAC"  />} />
@@ -53,7 +58,7 @@ const Routing = () => {
             <Route path="/Committee" element={< Committee folder="COMMITTEE"  />} />
             <Route path="/IqacEvents" element={< IqacEvents folder="IQACEVENTS"  />} />
             <Route path="/FeedbackPolicy" element={< FeedbackPolicy folder="PTU FEEBACK POLICY"  />} />
-            <Route path="/LoginRegister" element={< LoginRegister/>} />
+           
           </Routes>
        
      
