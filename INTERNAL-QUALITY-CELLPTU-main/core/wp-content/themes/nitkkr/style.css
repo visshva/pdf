@@ -1,0 +1,21 @@
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); 
+
+
+
+
+.logo_text{ font-size: 17px; font-weight: 80; }
+.logo_text span{ font-size: 17px; }
+.logo_text span{ font-family:Poppins;font-weight: 600;}
+.logo_text span{ color: #69180d;}
+.logo_text .lgt{font-size: 34px; font-weight: 500; padding-bottom: 2px !important;}
+.logo_text .colloborate{ font-size: 14px; font-weight: bold; color: #c21717; margin-top: 10px !important;} 
+
+.logo_text { text-align: center;}
+
+
+
+

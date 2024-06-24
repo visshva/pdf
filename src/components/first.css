@@ -1,0 +1,11 @@
+.typed-text-carousel {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+.typed-text-carousel span {
+  display: inline-block;
+  margin-right: 20px;
+  /* Add animation effects or other styles here */
+}

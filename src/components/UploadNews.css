@@ -1,0 +1,38 @@
+.upload-news {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+  }
+  
+  .upload-news h2 {
+    text-align: center;
+  }
+  
+  .upload-news form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .upload-news input,
+  .upload-news textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .upload-news button {
+    padding: 10px;
+    background-color: #ff6f00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .upload-news button:hover {
+    background-color: #e65c00;
+  }
+  

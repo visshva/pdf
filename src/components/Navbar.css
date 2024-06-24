@@ -1,0 +1,75 @@
+.navbar {
+  background-color: white;
+  color: black;
+  box-shadow: none;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar {
+  justify-content: center;
+}
+
+.menu-container {
+  display: flex;
+  justify-content: center;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 0 20px;
+  border-right: 1px solid #ddd;
+}
+
+.menu-item:last-child {
+  border-right: none;
+}
+
+.menu-button {
+  color: black;
+  text-transform: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.menu-button:hover,
+.menu-button.active {/* navbar.css */
+
+  .navbar-button {
+    color: black;
+    text-transform: none;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+  
+  .navbar-button:hover {
+    background: rgba(255, 255, 255, 0.5); /* Adjust opacity for hover effect */
+  }
+  
+  .navbar-menu {
+    mt: 2;
+  }
+  
+  .navbar-submenu-item {
+    color: black;
+  }
+  
+  .navbar-submenu-item:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Adjust opacity for hover effect */
+  }
+  
+  color: red;
+}
+
+.submenu {
+  margin-top: 20px;
+}
+
+.submenu .MuiMenuItem-root {
+  white-space: nowrap;
+}

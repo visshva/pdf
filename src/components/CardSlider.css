@@ -1,0 +1,106 @@
+.slider-container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+    background-image: url('./images/ptu.jpg'); /* Add your background image path here */
+    background-size: cover; /* Ensure the background image covers the entire container */
+    background-position: center; /* Center the background image */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .slider-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 0 15px; /* Add horizontal margin between cards */
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .card-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #ff6f61;
+    transition: border 0.3s;
+  }
+  
+  .card-image:hover {
+    border: 4px solid #ff3e41;
+  }
+  
+  .card-content {
+    text-align: center;
+  }
+  
+  .card-name {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .card-position {
+    font-size: 1rem;
+    color: #2ecc71;
+  }
+  
+  .card-role {
+    font-size: 1rem;
+    color: #e74c3c;
+  }
+  
+  .card-email a {
+    color: #3498db;
+    text-decoration: none;
+  }
+  
+  .card-email a:hover {
+    text-decoration: underline;
+  }
+  
+  .slick-prev, .slick-next {
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slick-prev:before, .slick-next:before {
+    color: white;
+    font-size: 20px;
+  }
+  .overlay-contents {
+    padding: 20px;
+    background:white;
+    border-radius: 5px;
+  }
+  .main-titles {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 40px;
+    text-shadow: 6px -1px 5px white;
+  }
+  
